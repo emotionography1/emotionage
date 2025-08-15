@@ -244,7 +244,14 @@ export default function EmotionalAgeLanding() {
   async function collectEmail() {
     if (!COLLECT_ENDPOINT) return true;
     try {
-      const payload = { name, email, consent, ts: new Date().toISOString() };
+      const payload = { 
+         name,
+         email,
+         consent,
+         ts_from_client: new Date().toISOString(),
+         user_agent: navigator.userAgent,
+         page_path: window.location.href,
+    };
       await fetch(COLLECT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
