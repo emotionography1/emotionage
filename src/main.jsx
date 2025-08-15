@@ -2,8 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 
-// 전역 Kakao 타입 경고 회피
-/* eslint-disable no-undef */
+// Kakao 전역 (없어도 무방, 오류 회피용)
 window.Kakao = window.Kakao || undefined;
 
 createRoot(document.getElementById("root")).render(
