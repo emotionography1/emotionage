@@ -1,17 +1,21 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 
 /**
- * Emotionography — 감정 나이 테스트
- * - 브랜드: #9880ff, Nanum Gothic (Gotham Medium 후보)
- * - 28문항 / 결과 즉시 표시 / 공유 / 이메일 게이트(수집만)
+ * Emotionography — 감정 나이 테스트 (브랜드 #9880ff / Nanum Gothic)
+ * - 28문항 / 결과 즉시 표시
+ * - 이메일 게이트(수집만, 결과 메일 발송 X)
+ * - 공유: Web Share, 페북, Threads, 카카오톡(키 없으면 자동 링크복사)
+ * - 상단 SVG 로고 완전 제거
  */
 
-// (선택) 카카오톡 공유를 쓰려면 index.html에 SDK 포함 + 키 설정
-const KAKAO_JS_KEY = ""; // 예: "xxxxxxxx..." (없으면 카톡 버튼은 링크복사로 대체)
+// (선택) 카카오톡 공유를 쓰려면 index.html에 SDK 추가 후 키 입력
+// <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+const KAKAO_JS_KEY = ""; // 없으면 카톡 버튼은 링크복사로 동작
 
 export default function EmotionalAgeLanding() {
   const brandColor = "#9880ff";
-  const fontStack = "'Gotham Medium','Nanum Gothic','Noto Sans KR',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,'Apple SD Gothic Neo','Malgun Gothic',sans-serif";
+  const fontStack =
+    "'Gotham Medium','Nanum Gothic','Noto Sans KR',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,'Apple SD Gothic Neo','Malgun Gothic',sans-serif";
 
   // 28문항
   const questions = [
@@ -61,13 +65,17 @@ export default function EmotionalAgeLanding() {
   const quizRef = useRef(null);
   const resultRef = useRef(null);
 
+  // Kakao SDK 초기화(있을 때만)
   useEffect(() => {
-    if (KAKAO_JS_KEY && typeof window !== 'undefined' && window.Kakao && !window.Kakao.isInitialized?.()) {
+    if (typeof window !== "undefined" && KAKAO_JS_KEY && window.Kakao && !window.Kakao.isInitialized?.()) {
       try { window.Kakao.init(KAKAO_JS_KEY); } catch {}
     }
   }, []);
 
-  const progress = useMemo(() => Math.round((Object.keys(answers).length / questions.length) * 100), [answers]);
+  const progress = useMemo(
+    () => Math.round((Object.keys(answers).length / questions.length) * 100),
+    [answers]
+  );
 
   const levelForAge = (age) => {
     if (age <= 17) return "유년";
@@ -79,6 +87,7 @@ export default function EmotionalAgeLanding() {
 
   const compute = () => {
     if (Object.keys(answers).length !== questions.length) return;
+
     let raw = 0;
     const areaSums = { A: 0, B: 0, C: 0, D: 0 };
     const areaCounts = { A: 0, B: 0, C: 0, D: 0 };
@@ -95,19 +104,23 @@ export default function EmotionalAgeLanding() {
     const age = Math.round(12 + normalized * (60 - 12));
     const level = levelForAge(age);
 
-    // 영역 평균(1~5)
     const areas = { A: 0, B: 0, C: 0, D: 0 };
     Object.keys(areaSums).forEach((k) => {
       areas[k] = parseFloat((areaSums[k] / areaCounts[k]).toFixed(2));
     });
 
-    const payload = { name: name?.trim() || null, age, level, at: new Date().toISOString(), areas };
-    try { localStorage.setItem("emotional-age:last", JSON.stringify(payload)); } catch {}
+    try {
+      localStorage.setItem(
+        "emotional-age:last",
+        JSON.stringify({ name: name?.trim() || null, age, level, at: new Date().toISOString(), areas })
+      );
+    } catch {}
 
     setResult({ age, level, raw, areas });
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   };
 
+  // 해석 서술
   const levelNarrative = (lvl) => {
     switch (lvl) {
       case "유년":
@@ -125,31 +138,32 @@ export default function EmotionalAgeLanding() {
     }
   };
 
+  // 추천 프로그램 (링크는 필요 시 채우기)
   const programsMap = {
     유년: [
-      { title: "감정과 마음챙김 비기너 클래스", href: "https://www.emotionography.co.kr/housestore/?idx=18" },
-      { title: "성장과 연결을 돕는 31가지 질문엽서", href: "https://www.emotionography.co.kr/housestore/?idx=15" },
-      { title: "AMAMO 정기모임(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
+      { title: "감정과 마음챙김 비기너 클래스", href: "" },
+      { title: "성장과 연결을 돕는 31가지 질문엽서", href: "" },
+      { title: "AMAMO 정기모임(선택)", href: "" },
     ],
     청소년: [
-      { title: "토크 이모션 감정 워크북", href: "https://www.emotionography.co.kr/housestore/?idx=10" },
-      { title: "이모션 디자인 클래스", href: "https://www.emotionography.co.kr/housestore/?idx=16" },
-      { title: "AMAMO 정기모임(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
+      { title: "토크 이모션 감정 워크북", href: "" },
+      { title: "이모션 디자인 클래스", href: "" },
+      { title: "AMAMO 정기모임(선택)", href: "" },
     ],
     청년: [
-      { title: "나의 인사이드아웃 찾는 디지털 프로그램", href: "https://www.emotionography.co.kr/housestore/?idx=13" },
-      { title: "이모션 디자인 클래스", href: "https://www.emotionography.co.kr/housestore/?idx=16" },
-      { title: "AMAMO 정기모임(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
+      { title: "나의 인사이드아웃 찾는 디지털 프로그램", href: "" },
+      { title: "이모션 디자인 클래스", href: "" },
+      { title: "AMAMO 정기모임(선택)", href: "" },
     ],
     중년: [
-      { title: "이모션 디자인 클래스", href: "ttps://www.emotionography.co.kr/housestore/?idx=16" },
-      { title: "AMAMO 정기모임", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
-      { title: "토크 이모션 감정 워크북", href: "https://www.emotionography.co.kr/housestore/?idx=10" },
+      { title: "이모션 디자인 클래스", href: "" },
+      { title: "AMAMO 정기모임", href: "" },
+      { title: "토크 이모션 감정 워크북", href: "" },
     ],
     원숙: [
-      { title: "AMAMO 정기모임", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
-      { title: "토크 이모션 감정 워크북", href: "https://www.emotionography.co.kr/housestore/?idx=10" },
-      { title: "감정과 마음챙김 심화/리더십 코칭(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=16" },
+      { title: "AMAMO 정기모임", href: "" },
+      { title: "토크 이모션 감정 워크북", href: "" },
+      { title: "감정과 마음챙김 심화/리더십 코칭(선택)", href: "" },
     ],
   };
 
@@ -163,12 +177,13 @@ export default function EmotionalAgeLanding() {
 
   // 공유
   const shareUrl = () => {
-    if (!result) return window.location.href;
-    const base = typeof window !== "undefined" ? (window.location.origin + window.location.pathname) : "";
+    if (!result || typeof window === "undefined") return "";
+    const base = window.location.origin + window.location.pathname;
     const qs = new URLSearchParams({ age: String(result.age), level: result.level, ...(name ? { name } : {}) });
     return `${base}?${qs.toString()}`;
   };
-  const shareText = () => `${name ? name + '님의 ' : ''}감정 나이 ${result?.age}세 (${result?.level}) — Emotionography`;
+  const shareText = () =>
+    `${name ? name + "님의 " : ""}감정 나이 ${result?.age}세 (${result?.level}) — Emotionography`;
 
   const doWebShare = async () => {
     try {
@@ -177,7 +192,11 @@ export default function EmotionalAgeLanding() {
     } catch {}
   };
   const copyLink = async () => {
-    try { await navigator.clipboard.writeText(`${shareText()}\n${shareUrl()}`); setCopied(true); setTimeout(() => setCopied(false), 1600); } catch {}
+    try {
+      await navigator.clipboard.writeText(`${shareText()}\n${shareUrl()}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {}
   };
   const shareFacebook = () => {
     const u = encodeURIComponent(shareUrl());
@@ -189,65 +208,66 @@ export default function EmotionalAgeLanding() {
     window.open(`https://www.threads.net/intent/post?text=${txt}`, "_blank", "noopener,width=640,height=680");
   };
   const shareKakao = () => {
-  try {
-    // GH Pages 경로 포함한 절대경로 이미지 (Vite base 고려)
-    const BASE = (typeof window !== 'undefined')
-      ? (window.location.origin + (import.meta.env.BASE_URL || '/'))
-      : 'https://emotionography1.github.io/emotionage/';
-    const imageUrl = BASE.replace(/\/$/, '') + '/og-emage-1200x630-v4.png';
-
-    if (window.Kakao && window.Kakao.Link) {
-      window.Kakao.Link.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: '감정 나이 테스트',
-          description: shareText(),
-          imageUrl,
+    try {
+      if (typeof window !== "undefined" && window.Kakao && window.Kakao.Link) {
+        window.Kakao.Link.sendDefault({
+          objectType: "text",
+          text: `${shareText()}`,
           link: { mobileWebUrl: shareUrl(), webUrl: shareUrl() },
-        },
-        buttons: [
-          { title: '결과 보러가기', link: { mobileWebUrl: shareUrl(), webUrl: shareUrl() } }
-        ],
-      });
-    } else {
-      copyLink(); // SDK가 없으면 링크 복사로 대체
+        });
+      } else {
+        copyLink();
+      }
+    } catch {
+      copyLink();
     }
-  } catch {
-    copyLink();
-  }
-};
+  };
   const copyInstaCaption = async () => {
     try {
-      const cap = `${shareText()}
-#감정나이 #감정디자인 #Emotionography`;
+      const cap = `${shareText()}\n#감정나이 #감정디자인 #Emotionography`;
       await navigator.clipboard.writeText(cap);
-      setCopied(true); setTimeout(() => setCopied(false), 1600);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
     } catch {}
   };
 
   // 스타일
   const container = { minHeight: "100vh", backgroundColor: brandColor, color: "#fff", fontFamily: fontStack };
   const maxW = { maxWidth: 960, margin: "0 auto" };
-  const card = { background: "#fff", color: "#374151", borderRadius: 16, padding: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.08)" };
-  const buttonPrimary = { background: "#fff", color: brandColor, border: "none", borderRadius: 9999, padding: "12px 22px", fontWeight: 500, cursor: "pointer" };
-  const buttonGhost = { background: "transparent", color: "#fff", border: "1px solid rgba(255,255,255,0.8)", borderRadius: 9999, padding: "10px 18px", fontWeight: 500, cursor: "pointer" };
-
+  const card = {
+    background: "#fff",
+    color: "#374151",
+    borderRadius: 16,
+    padding: 24,
+    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+  };
+  const buttonPrimary = {
+    background: "#fff",
+    color: brandColor,
+    border: "none",
+    borderRadius: 9999,
+    padding: "12px 22px",
+    fontWeight: 500,
+    cursor: "pointer",
+  };
+  const buttonGhost = {
+    background: "transparent",
+    color: "#fff",
+    border: "1px solid rgba(255,255,255,0.8)",
+    borderRadius: 9999,
+    padding: "10px 18px",
+    fontWeight: 500,
+    cursor: "pointer",
+  };
 
   // 이메일 수집 엔드포인트(Google Apps Script 웹앱 URL)
   const COLLECT_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbw5Y792-TLT4Nx2uTbg1BivcZRVotWTJzyQ3tzzE4Mx7wUDSiye0f8B4oBwM04FuJMu/exec";
+    "https://script.google.com/macros/s/AKfycbzoaeIWmR0a16I5eNZwXVJy6huHnJ0qG7B0O_DTmvrhu-3FUXsElAxDnYBUvcMEC27m/exec";
 
   async function collectEmail() {
     if (!COLLECT_ENDPOINT) return true;
     try {
-      const payload = { 
-         name,
-         email,
-         consent,
-         ts_from_client: new Date().toISOString(),
-         user_agent: navigator.userAgent,
-         page_path: window.location.href,
-    };
+      const payload = { name, email, consent, ts: new Date().toISOString() };
       await fetch(COLLECT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -255,16 +275,17 @@ export default function EmotionalAgeLanding() {
         mode: "no-cors",
       });
       return true;
-    } catch (e) { console.warn("collectEmail error", e); return true; }
+    } catch {
+      return true; // 실패해도 UX 계속
+    }
   }
 
   const emailValid = /.+@.+\..+/.test(email);
 
   return (
     <div style={container}>
-      {/* 헤더 */}
+      {/* 헤더(로고 제거) */}
       <header style={{ ...maxW, padding: "16px 16px" }} />
-      </header>
 
       {/* 히어로 */}
       <section style={{ ...maxW, padding: "40px 16px 24px" }}>
@@ -310,7 +331,15 @@ export default function EmotionalAgeLanding() {
                 }
               }}
               disabled={!emailValid || !consent}
-              style={{ background: (emailValid && consent) ? brandColor : "#c7c7c7", color: "#fff", border: "none", borderRadius: 12, padding: "10px 14px", fontWeight: 500, cursor: (emailValid && consent) ? 'pointer' : 'not-allowed' }}
+              style={{
+                background: emailValid && consent ? brandColor : "#c7c7c7",
+                color: "#fff",
+                border: "none",
+                borderRadius: 12,
+                padding: "10px 14px",
+                fontWeight: 500,
+                cursor: emailValid && consent ? "pointer" : "not-allowed",
+              }}
             >
               테스트 시작하기
             </button>
@@ -337,18 +366,20 @@ export default function EmotionalAgeLanding() {
             {questions.map((q) => (
               <li key={q.id} style={{ border: "1px solid #e5e7eb", borderRadius: 16, padding: 16, background: "#fff" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline" }}>
-                  <div>{q.id}. [{areaLabel[q.area]}] {q.text} {q.reverse ? <span style={{ color: "#9ca3af", marginLeft: 6, fontSize: 12 }}>(역)</span> : null}</div>
+                  <div>
+                    {q.id}. [{areaLabel[q.area]}] {q.text} {q.reverse ? <span style={{ color: "#9ca3af", marginLeft: 6, fontSize: 12 }}>(역)</span> : null}
+                  </div>
                   <div style={{ fontSize: 12, color: "#6b7280" }}>{answers[q.id] ? `${answers[q.id]} / 5` : "미응답"}</div>
                 </div>
                 <div style={{ marginTop: 10, display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
-                  {[1,2,3,4,5].map((v) => (
+                  {[1, 2, 3, 4, 5].map((v) => (
                     <button
                       key={v}
                       onClick={() => gateOK && setAnswers((prev) => ({ ...prev, [q.id]: v }))}
                       style={{
                         padding: "10px 8px",
                         borderRadius: 12,
-                        border: `1px solid ${answers[q.id] === v ? brandColor : '#e5e7eb'}`,
+                        border: `1px solid ${answers[q.id] === v ? brandColor : "#e5e7eb"}`,
                         background: answers[q.id] === v ? brandColor : "#fff",
                         color: answers[q.id] === v ? "#fff" : "#374151",
                         cursor: gateOK ? "pointer" : "not-allowed",
@@ -381,7 +412,11 @@ export default function EmotionalAgeLanding() {
             <button
               onClick={compute}
               disabled={Object.keys(answers).length !== questions.length || !gateOK}
-              style={{ ...buttonPrimary, opacity: (Object.keys(answers).length === questions.length && gateOK) ? 1 : 0.6, cursor: (Object.keys(answers).length === questions.length && gateOK) ? 'pointer' : 'not-allowed' }}
+              style={{
+                ...buttonPrimary,
+                opacity: Object.keys(answers).length === questions.length && gateOK ? 1 : 0.6,
+                cursor: Object.keys(answers).length === questions.length && gateOK ? "pointer" : "not-allowed",
+              }}
             >
               결과 보기
             </button>
@@ -400,8 +435,13 @@ export default function EmotionalAgeLanding() {
             <div style={{ display: "grid", gap: 16 }}>
               <div>
                 <div style={{ fontSize: 14, color: "#6b7280" }}>{name ? `${name}님의 감정 나이` : "감정 나이"}</div>
-                <div style={{ marginTop: 4, fontSize: 48 }}>{result.age}<span style={{ fontSize: 20, marginLeft: 4 }}>세</span></div>
-                <div style={{ marginTop: 6, color: "#374151" }}>단계: {result.level} · 강점 영역: {topAreas(result.areas, 2)} · 성장 포인트: {lowAreas(result.areas, 1)}</div>
+                <div style={{ marginTop: 4, fontSize: 48 }}>
+                  {result.age}
+                  <span style={{ fontSize: 20, marginLeft: 4 }}>세</span>
+                </div>
+                <div style={{ marginTop: 6, color: "#374151" }}>
+                  단계: {result.level} · 강점 영역: {topAreas(result.areas, 2)} · 성장 포인트: {lowAreas(result.areas, 1)}
+                </div>
               </div>
 
               {/* 해석 */}
@@ -411,35 +451,34 @@ export default function EmotionalAgeLanding() {
               </div>
 
               {/* 추천 프로그램 */}
-<div style={{ border: "1px solid #e5e7eb", borderRadius: 16, padding: 16, background: "#fff" }}>
-  <div style={{ marginBottom: 6, display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
-    <span>추천 프로그램</span>
-    <span style={{ fontSize: 12, color: "#6b7280" }}>
-      클릭하면 자세히 볼 수 있습니다.
-    </span>
-  </div>
-  <ul style={{ margin: 0, paddingLeft: 18, color: "#374151" }}>
-    {programsMap[result.level].map((p, idx) => (
-      <li key={idx} style={{ marginBottom: 4 }}>
-        <a href={p.href} style={{ color: brandColor }} target="_blank" rel="noreferrer">
-          {p.title}
-        </a>
-      </li>
-    ))}
-  </ul>
-</div>
-
+              <div style={{ border: "1px solid #e5e7eb", borderRadius: 16, padding: 16, background: "#fff" }}>
+                <div style={{ marginBottom: 6 }}>추천 프로그램</div>
+                <ul style={{ margin: 0, paddingLeft: 18, color: "#374151" }}>
+                  {programsMap[result.level].map((p, idx) => (
+                    <li key={idx} style={{ marginBottom: 4 }}>
+                      {p.href ? (
+                        <a href={p.href} style={{ color: brandColor }} target="_blank" rel="noreferrer">
+                          {p.title}
+                        </a>
+                      ) : (
+                        <span>{p.title}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <div style={{ fontSize: 12, color: "#6b7280", marginTop: 8 }}>※ 링크는 사업 페이지 URL을 채우면 자동 활성화됩니다.</div>
+              </div>
 
               {/* 공유 */}
               <div style={{ display: "grid", gap: 8 }}>
                 <div style={{ marginBottom: 2 }}>공유하기</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  <button onClick={doWebShare} style={{ background: brandColor, color: "#fff", border: "none", borderRadius: 12, padding: "10px 14px", cursor: 'pointer' }}>공유(모바일)</button>
-                  <button onClick={shareFacebook} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: 'pointer' }}>페이스북</button>
-                  <button onClick={shareThreads} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: 'pointer' }}>Threads</button>
-                  <button onClick={shareKakao} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: 'pointer' }}>카카오톡</button>
-                  <button onClick={copyInstaCaption} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: 'pointer' }}>인스타 캡션 복사</button>
-                  <button onClick={copyLink} style={{ background: "#f3f4f6", color: "#374151", border: "1px solid #e5e7eb", borderRadius: 12, padding: "10px 14px", cursor: 'pointer' }}>{copied ? "복사됨!" : "링크 복사"}</button>
+                  <button onClick={doWebShare} style={{ background: brandColor, color: "#fff", border: "none", borderRadius: 12, padding: "10px 14px", cursor: "pointer" }}>공유(모바일)</button>
+                  <button onClick={shareFacebook} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: "pointer" }}>페이스북</button>
+                  <button onClick={shareThreads} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: "pointer" }}>Threads</button>
+                  <button onClick={shareKakao} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: "pointer" }}>카카오톡</button>
+                  <button onClick={copyInstaCaption} style={{ background: "#fff", color: brandColor, border: `1px solid ${brandColor}`, borderRadius: 12, padding: "10px 14px", cursor: "pointer" }}>인스타 캡션 복사</button>
+                  <button onClick={copyLink} style={{ background: "#f3f4f6", color: "#374151", border: "1px solid #e5e7eb", borderRadius: 12, padding: "10px 14px", cursor: "pointer" }}>{copied ? "복사됨!" : "링크 복사"}</button>
                 </div>
                 <div style={{ fontSize: 12, color: "#6b7280" }}>
                   인스타그램은 웹에서 바로 게시가 불가해요. <b>인스타 캡션 복사</b> 또는 <b>링크 복사</b>를 사용해 붙여넣어 주세요.
@@ -462,9 +501,20 @@ export default function EmotionalAgeLanding() {
 
       {/* 푸터 */}
       <footer style={{ borderTop: "1px solid rgba(255,255,255,0.35)" }}>
-        <div style={{ ...maxW, padding: "18px 16px", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, fontSize: 12, opacity: 0.9 }}>
+        <div
+          style={{
+            ...maxW,
+            padding: "18px 16px",
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 8,
+            fontSize: 12,
+            opacity: 0.9,
+          }}
+        >
           <span>© {new Date().getFullYear()} Emotionography — Self-reflection tool</span>
-          <span>문의: emotionography@my-emo.com</span>
+          <span>문의: hello@emotionography.example</span>
         </div>
       </footer>
     </div>
@@ -490,6 +540,3 @@ function labelFor(v) {
     default: return String(v);
   }
 }
-
-// Kakao 전역(없어도 무방, 오류 회피용)
-window.Kakao = window.Kakao || undefined;
