@@ -127,29 +127,29 @@ export default function EmotionalAgeLanding() {
 
   const programsMap = {
     유년: [
-      { title: "감정과 마음챙김 비기너 클래스", href: "" },
-      { title: "성장과 연결을 돕는 31가지 질문엽서", href: "" },
-      { title: "AMAMO 정기모임(선택)", href: "" },
+      { title: "감정과 마음챙김 비기너 클래스", href: "https://www.emotionography.co.kr/housestore/?idx=18" },
+      { title: "성장과 연결을 돕는 31가지 질문엽서", href: "https://www.emotionography.co.kr/housestore/?idx=15" },
+      { title: "AMAMO 정기모임(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
     ],
     청소년: [
-      { title: "토크 이모션 감정 워크북", href: "" },
-      { title: "이모션 디자인 클래스", href: "" },
-      { title: "AMAMO 정기모임(선택)", href: "" },
+      { title: "토크 이모션 감정 워크북", href: "https://www.emotionography.co.kr/housestore/?idx=10" },
+      { title: "이모션 디자인 클래스", href: "https://www.emotionography.co.kr/housestore/?idx=16" },
+      { title: "AMAMO 정기모임(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
     ],
     청년: [
-      { title: "나의 인사이드아웃 찾는 디지털 프로그램", href: "" },
-      { title: "이모션 디자인 클래스", href: "" },
-      { title: "AMAMO 정기모임(선택)", href: "" },
+      { title: "나의 인사이드아웃 찾는 디지털 프로그램", href: "https://www.emotionography.co.kr/housestore/?idx=13" },
+      { title: "이모션 디자인 클래스", href: "https://www.emotionography.co.kr/housestore/?idx=16" },
+      { title: "AMAMO 정기모임(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
     ],
     중년: [
-      { title: "이모션 디자인 클래스", href: "" },
-      { title: "AMAMO 정기모임", href: "" },
-      { title: "토크 이모션 감정 워크북", href: "" },
+      { title: "이모션 디자인 클래스", href: "ttps://www.emotionography.co.kr/housestore/?idx=16" },
+      { title: "AMAMO 정기모임", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
+      { title: "토크 이모션 감정 워크북", href: "https://www.emotionography.co.kr/housestore/?idx=10" },
     ],
     원숙: [
-      { title: "AMAMO 정기모임", href: "" },
-      { title: "토크 이모션 감정 워크북", href: "" },
-      { title: "감정과 마음챙김 심화/리더십 코칭(선택)", href: "" },
+      { title: "AMAMO 정기모임", href: "https://www.emotionography.co.kr/housestore/?idx=17" },
+      { title: "토크 이모션 감정 워크북", href: "https://www.emotionography.co.kr/housestore/?idx=10" },
+      { title: "감정과 마음챙김 심화/리더십 코칭(선택)", href: "https://www.emotionography.co.kr/housestore/?idx=16" },
     ],
   };
 
