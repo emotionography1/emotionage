@@ -409,17 +409,24 @@ export default function EmotionalAgeLanding() {
               </div>
 
               {/* 추천 프로그램 */}
-              <div style={{ border: "1px solid #e5e7eb", borderRadius: 16, padding: 16, background: "#fff" }}>
-                <div style={{ marginBottom: 6 }}>추천 프로그램</div>
-                <ul style={{ margin: 0, paddingLeft: 18, color: "#374151" }}>
-                  {programsMap[result.level].map((p, idx) => (
-                    <li key={idx} style={{ marginBottom: 4 }}>
-                      {p.href ? <a href={p.href} style={{ color: brandColor }} target="_blank" rel="noreferrer">{p.title}</a> : <span>{p.title}</span>}
-                    </li>
-                  ))}
-                </ul>
-            
-              </div>
+<div style={{ border: "1px solid #e5e7eb", borderRadius: 16, padding: 16, background: "#fff" }}>
+  <div style={{ marginBottom: 6, display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
+    <span>추천 프로그램</span>
+    <span style={{ fontSize: 12, color: "#6b7280" }}>
+      클릭하면 자세히 볼 수 있습니다.
+    </span>
+  </div>
+  <ul style={{ margin: 0, paddingLeft: 18, color: "#374151" }}>
+    {programsMap[result.level].map((p, idx) => (
+      <li key={idx} style={{ marginBottom: 4 }}>
+        <a href={p.href} style={{ color: brandColor }} target="_blank" rel="noreferrer">
+          {p.title}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
 
               {/* 공유 */}
               <div style={{ display: "grid", gap: 8 }}>
