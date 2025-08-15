@@ -232,10 +232,6 @@ export default function EmotionalAgeLanding() {
   const buttonPrimary = { background: "#fff", color: brandColor, border: "none", borderRadius: 9999, padding: "12px 22px", fontWeight: 500, cursor: "pointer" };
   const buttonGhost = { background: "transparent", color: "#fff", border: "1px solid rgba(255,255,255,0.8)", borderRadius: 9999, padding: "10px 18px", fontWeight: 500, cursor: "pointer" };
 
-  // 로고
-  const LOGO_SRC = "/logo-emotionography.svg"; // public 폴더에 업로드 후 파일명 맞추기
-  const LOGO_ALT = "Emotionography";
-  const LOGO_HEIGHT = 56;
 
   // 이메일 수집 엔드포인트(Google Apps Script 웹앱 URL)
   const COLLECT_ENDPOINT =
@@ -267,8 +263,7 @@ export default function EmotionalAgeLanding() {
   return (
     <div style={container}>
       {/* 헤더 */}
-      <header style={{ ...maxW, padding: "20px 16px", display: "flex", justifyContent: "center" }}>
-        <img src={LOGO_SRC} alt={LOGO_ALT} style={{ height: LOGO_HEIGHT }} />
+      <header style={{ ...maxW, padding: "16px 16px" }} />
       </header>
 
       {/* 히어로 */}
