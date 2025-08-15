@@ -402,7 +402,7 @@ export default function EmotionalAgeLanding() {
                     </li>
                   ))}
                 </ul>
-                <div style={{ fontSize: 12, color: "#6b7280", marginTop: 8 }}>※ 링크는 사업 페이지 URL을 채우면 자동 활성화됩니다.</div>
+            
               </div>
 
               {/* 공유 */}
