@@ -189,18 +189,33 @@ export default function EmotionalAgeLanding() {
     window.open(`https://www.threads.net/intent/post?text=${txt}`, "_blank", "noopener,width=640,height=680");
   };
   const shareKakao = () => {
-    try {
-      if (window.Kakao && window.Kakao.Link) {
-        window.Kakao.Link.sendDefault({
-          objectType: 'text',
-          text: `${shareText()}`,
+  try {
+    // GH Pages 경로 포함한 절대경로 이미지 (Vite base 고려)
+    const BASE = (typeof window !== 'undefined')
+      ? (window.location.origin + (import.meta.env.BASE_URL || '/'))
+      : 'https://emotionography1.github.io/emotionage/';
+    const imageUrl = BASE.replace(/\/$/, '') + '/og-emage-1200x630-v4.png';
+
+    if (window.Kakao && window.Kakao.Link) {
+      window.Kakao.Link.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '감정 나이 테스트',
+          description: shareText(),
+          imageUrl,
           link: { mobileWebUrl: shareUrl(), webUrl: shareUrl() },
-        });
-      } else {
-        copyLink(); // SDK 없으면 링크 복사
-      }
-    } catch { copyLink(); }
-  };
+        },
+        buttons: [
+          { title: '결과 보러가기', link: { mobileWebUrl: shareUrl(), webUrl: shareUrl() } }
+        ],
+      });
+    } else {
+      copyLink(); // SDK가 없으면 링크 복사로 대체
+    }
+  } catch {
+    copyLink();
+  }
+};
   const copyInstaCaption = async () => {
     try {
       const cap = `${shareText()}
