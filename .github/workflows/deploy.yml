@@ -10,6 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,19 +22,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      - run: npm i
-      - run: npm i -D @vitejs/plugin-react
-      - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+      - name: Install deps
+        run: npm i
+      - name: Build
+        run: npm run build
+      - name: Upload dist
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/configure-pages@v5
       - id: deployment
         uses: actions/deploy-pages@v4
