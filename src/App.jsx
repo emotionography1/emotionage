@@ -238,7 +238,8 @@ export default function EmotionalAgeLanding() {
   const LOGO_HEIGHT = 56;
 
   // 이메일 수집 엔드포인트(Google Apps Script 웹앱 URL)
-  const COLLECT_ENDPOINT = "https://script.google.com/macros/s/AKfycbzoaeIWmR0a16I5eNZwXVJy6huHnJ0qG7B0O_DTmvrhu-3FUXsElAxDnYBUvcMEC27m/exec";
+  const COLLECT_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbw5Y792-TLT4Nx2uTbg1BivcZRVotWTJzyQ3tzzE4Mx7wUDSiye0f8B4oBwM04FuJMu/exec";
 
   async function collectEmail() {
     if (!COLLECT_ENDPOINT) return true;
