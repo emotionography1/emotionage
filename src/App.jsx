@@ -285,10 +285,10 @@ export default function EmotionalAgeLanding() {
   return (
     <div style={container}>
       {/* 헤더(로고 제거) */}
-      <header style={{ ...maxW, padding: "16px 16px" }} />
+      <header style={{ ...maxW, padding: "20px 24px" }} />
 
       {/* 히어로 */}
-      <section style={{ ...maxW, padding: "40px 16px 24px" }}>
+      <section style={{ ...maxW, padding: "48px 24px 32px" }}>
         <div style={{ textAlign: "center" }}>
           <h1 style={{ fontSize: 40, fontWeight: 700, lineHeight: 1.2 }}>
             내 <span style={{ background: "rgba(255,255,255,0.9)", color: brandColor, padding: "0 8px", borderRadius: 8 }}>감정 나이</span>는 몇 살일까?
@@ -304,7 +304,7 @@ export default function EmotionalAgeLanding() {
       </section>
 
       {/* 이메일 게이트 */}
-      <section id="gate" style={{ ...maxW, padding: "0 16px 24px" }}>
+      <section id="gate" style={{ ...maxW, padding: "0 24px 32px" }}>
         <div style={card}>
           <div style={{ marginBottom: 8, fontSize: 18 }}>결과 리포트를 받으실 이메일을 입력해 주세요</div>
           <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr" }}>
@@ -349,7 +349,7 @@ export default function EmotionalAgeLanding() {
       </section>
 
       {/* 퀴즈 */}
-      <section ref={quizRef} style={{ ...maxW, padding: "24px 16px" }}>
+      <section ref={quizRef} style={{ ...maxW, padding: "32px 24px" }}>
         <div style={{ ...card, opacity: gateOK ? 1 : 0.6 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <h2 style={{ margin: 0, fontSize: 20 }}>테스트</h2>
@@ -428,7 +428,7 @@ export default function EmotionalAgeLanding() {
       </section>
 
       {/* 결과 */}
-      <section ref={resultRef} style={{ ...maxW, padding: "8px 16px 40px" }}>
+      <section ref={resultRef} style={{ ...maxW, padding: "8px 24px 48px" }}>
         {result && (
           <div style={card}>
             <h2 style={{ marginTop: 0, fontSize: 20 }}>결과 리포트</h2>
@@ -490,7 +490,7 @@ export default function EmotionalAgeLanding() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" style={{ ...maxW, padding: "0 16px 40px" }}>
+      <section id="faq" style={{ ...maxW, padding: "0 24px 48px" }}>
         <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr" }}>
           <Faq q="임상 진단인가요?" a="아니요. 자기이해를 돕는 비임상 셀프체크입니다." />
           <Faq q="점수는 어떻게 나와요?" a="역문항을 포함해 28문항(1~5점)을 합산 후 12~60세 스케일로 환산합니다." />
@@ -504,7 +504,7 @@ export default function EmotionalAgeLanding() {
         <div
           style={{
             ...maxW,
-            padding: "18px 16px",
+            padding: "24px 24px",
             display: "flex",
             justifyContent: "space-between",
             flexWrap: "wrap",
